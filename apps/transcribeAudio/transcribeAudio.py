@@ -6,9 +6,37 @@ from tkinter import filedialog, messagebox
 
 import os
 
-# os.environ["CUDA_VISIBLE_DEVICES"] = "1"  # Use the second GPU (index 1)
-# pip install git+https://github.com/openai/whisper.git
 import whisper
+import srt
+from datetime import timedelta
+
+def increment_filename(file_path: str, template: str = " ({counter})") -> str:
+    """
+    increment_filename increments given file
+
+    Args:
+        file_path (str): path to file. will increment if exists
+        template (str): python template. Please use `counter` for the increment argument<br>
+            Defaults to " ({counter})".<br>
+            ex: `' ({counter:03})'` to pad left with zeros.
+
+    Returns:
+        str: new file path
+    """
+    # Split the file path into directory, base name, and extension
+    directory, base_name = os.path.split(file_path)
+    name, ext = os.path.splitext(base_name)
+
+    # Initialize the counter
+    counter: int = 1
+
+    # Generate new file name with increment
+    while os.path.exists(file_path):
+        increment: str = template.replace("{counter}", str(counter))
+        new_name: str = f"{name}{increment}{ext}"
+        file_path = os.path.join(directory, new_name)
+        counter += 1
+    return file_path
 
 
 def transcribe_audio_files(file_paths, output_dir):
@@ -24,15 +52,35 @@ def transcribe_audio_files(file_paths, output_dir):
             result = model.transcribe(file_path)
 
             # Create the output file path
-            output_file_path = os.path.join(
+            output_txt_file_path = os.path.join(
                 output_dir, os.path.basename(file_path) + ".txt"
             )
+            output_txt_file_path = increment_filename(output_txt_file_path)
+            output_srt_file_path = os.path.join(
+                output_dir, os.path.basename(file_path) + ".txt"
+            )
+            output_srt_file_path = increment_filename(output_srt_file_path)
+            
+
+            segments = []
+            for i, segment in enumerate(result["segments"]):
+                start = timedelta(seconds=segment["start"])
+                end = timedelta(seconds=segment["end"])
+                segments.append(
+                    srt.Subtitle(
+                        index=i + 1, start=start, end=end, content=segment["text"]
+                    )
+                )
+
+            with open(output_srt_file_path, "w", encoding="utf-8") as f:
+                f.write(srt.compose(segments))
 
             # Write the transcript to the output file
-            with open(output_file_path, "w") as f:
+            with open(output_txt_file_path, "w", encoding="utf-8") as f:
                 f.write(str(result["text"]))
 
-            print(f"Transcript saved for {file_path} at {output_file_path}")
+            print(f"Transcript saved for {file_path} at {output_txt_file_path}")
+            print(f"Transcription saved to: {output_srt_file_path}")
         else:
             print(f"File not found: {file_path}")
 

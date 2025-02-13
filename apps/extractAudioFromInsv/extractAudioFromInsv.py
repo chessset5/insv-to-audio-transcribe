@@ -20,6 +20,7 @@ def extract_audio(video_path, output_folder):
     )
 
     print(f"Completed extraction for: {video_path}")
+    return audio_path
 
 
 # Function to start the extraction process
@@ -33,11 +34,13 @@ def start_extraction(video_files, output_folder):
 
     # Use ThreadPoolExecutor to run multiple extractions simultaneously
     with ThreadPoolExecutor() as executor:
-        executor.map(
+        result = executor.map(
             lambda video_file: extract_audio(video_file, output_folder), video_files
         )
+        
 
     messagebox.showinfo("Success", "Audio extraction completed for all files.")
+    return list(result)
 
 
 # Function to select video files
