@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import filedialog
 from concurrent.futures import ThreadPoolExecutor
 
-from apps.extract-audio-from-insv import 
+from apps.extractAudioFromInsv.extractAudioFromInsv import start_extraction
 
 def run_audio_extract(file: str):
     directory = os.path.dirname(file)

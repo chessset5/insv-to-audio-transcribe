@@ -4,6 +4,9 @@ from concurrent.futures import ThreadPoolExecutor
 import tkinter as tk
 from tkinter import filedialog, messagebox
 
+from apps.incFile import increment_filename
+
+
 # THIS IS A GUI PROGRAM! PLEASE RUN FILE TO MAKE GUI!
 
 
@@ -13,6 +16,8 @@ def extract_audio(video_path, output_folder):
     audio_path = os.path.join(
         output_folder, os.path.splitext(os.path.basename(video_path))[0] + ".wav"
     )
+
+    audio_path = increment_filename(audio_path)
 
     # Run ffmpeg command to extract audio
     subprocess.run(
@@ -37,7 +42,6 @@ def start_extraction(video_files, output_folder):
         result = executor.map(
             lambda video_file: extract_audio(video_file, output_folder), video_files
         )
-        
 
     messagebox.showinfo("Success", "Audio extraction completed for all files.")
     return list(result)
