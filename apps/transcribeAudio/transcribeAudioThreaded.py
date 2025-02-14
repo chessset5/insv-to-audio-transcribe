@@ -13,7 +13,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from concurrent.futures import ThreadPoolExecutor
 
-from apps.incFile import increment_filename
+from apps.FileNameFunctions import increment_filename
 
 
 # THIS IS A GUI PROGRAM! PLEASE RUN FILE TO MAKE GUI!

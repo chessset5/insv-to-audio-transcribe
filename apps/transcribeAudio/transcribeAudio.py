@@ -7,14 +7,16 @@ from datetime import timedelta
 import whisper
 import srt
 
-from apps.incFile import increment_filename
+from apps.FileNameFunctions import increment_filename, get_base_file_name
 
 
-def transcribe_audio_files(file_paths:list[str], output_dir:str):
+def transcribe_audio_files(file_paths: list[str], output_dir: str) -> list[str]:
     # Load the Whisper model
     model: whisper.Whisper = whisper.load_model(
         name="turbo", in_memory=True
     )  # Use the second GPU (index 1)
+
+    output_files = list[str]()
 
     for file_path in file_paths:
         # Check if the file exists
@@ -24,11 +26,12 @@ def transcribe_audio_files(file_paths:list[str], output_dir:str):
             result = model.transcribe(file_path)
 
             # Create the output file path
-            output_txt_file_path = os.path.join(
-                output_dir, os.path.basename(file_path) + ".txt"
+            name = get_base_file_name(file_path=file_path)
+            output_txt_file_path = os.path.normpath(
+                os.path.join(output_dir, os.path.basename(name) + ".txt")
             )
-            output_srt_file_path = os.path.join(
-                output_dir, os.path.basename(file_path) + ".srt"
+            output_srt_file_path = os.path.normpath(
+                os.path.join(output_dir, os.path.basename(name) + ".srt")
             )
             output_txt_file_path = increment_filename(output_txt_file_path)
             output_srt_file_path = increment_filename(output_srt_file_path)
@@ -52,7 +55,12 @@ def transcribe_audio_files(file_paths:list[str], output_dir:str):
             with open(output_txt_file_path, "w", encoding="utf-8") as f:
                 f.write(str(result["text"]))
 
+            output_files.append(output_srt_file_path)
+            output_files.append(output_txt_file_path)
+
             print(f"Transcript saved for {file_path} at {output_txt_file_path}")
             print(f"srt captions for {file_path} at {output_srt_file_path}")
         else:
             print(f"File not found: {file_path}")
+
+    return output_files

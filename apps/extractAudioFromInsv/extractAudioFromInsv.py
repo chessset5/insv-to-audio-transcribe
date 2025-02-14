@@ -1,7 +1,7 @@
 import os
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
-from apps.incFile import increment_filename
+from apps.FileNameFunctions import increment_filename
 
 
 # THIS IS A GUI PROGRAM! PLEASE RUN FILE TO MAKE GUI!
