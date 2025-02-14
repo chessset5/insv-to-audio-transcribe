@@ -6,8 +6,23 @@ from tkinter import ttk
 
 # Wrapper function to run scripts and show a GUI message
 def run_scripts_gui(file_paths: list[str]) -> None:
-    messagebox.showinfo("Run Scripts", f"Running scripts for files: {file_paths}")
-    run_scripts(file_paths=file_paths)
+    # Show the selected files and ask for confirmation
+    confirmation = messagebox.askyesno(
+        "Confirm Files",
+        f"Are you sure you want to run scripts for the following files?\n\n{', '.join(file_paths)}",
+    )
+
+    # If the user confirms, run the scripts
+    if confirmation:
+        messagebox.showinfo(
+            "Running Scripts", f"Running scripts for files: {file_paths}"
+        )
+        run_scripts(file_paths=file_paths)
+        messagebox.showinfo(
+            "Finished", f"Finished running scripts for files: {file_paths}"
+        )
+    else:
+        messagebox.showinfo("Cancelled", "Script execution was cancelled.")
 
 
 # Main application class
