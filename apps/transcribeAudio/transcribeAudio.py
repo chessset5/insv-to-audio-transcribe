@@ -1,19 +1,16 @@
-import tkinter as tk
-from tkinter import filedialog, messagebox
-
 # THIS IS A GUI PROGRAM! PLEASE RUN FILE TO MAKE GUI!
 
 
 import os
+from datetime import timedelta
 
 import whisper
 import srt
-from datetime import timedelta
 
 from apps.incFile import increment_filename
 
 
-def transcribe_audio_files(file_paths, output_dir):
+def transcribe_audio_files(file_paths:list[str], output_dir:str):
     # Load the Whisper model
     model: whisper.Whisper = whisper.load_model(
         name="turbo", in_memory=True
@@ -22,6 +19,7 @@ def transcribe_audio_files(file_paths, output_dir):
     for file_path in file_paths:
         # Check if the file exists
         if os.path.exists(file_path):
+            print("transcribing: ", str(file_path))
             # Transcribe the audio file
             result = model.transcribe(file_path)
 
@@ -29,12 +27,13 @@ def transcribe_audio_files(file_paths, output_dir):
             output_txt_file_path = os.path.join(
                 output_dir, os.path.basename(file_path) + ".txt"
             )
-            output_txt_file_path = increment_filename(output_txt_file_path)
             output_srt_file_path = os.path.join(
-                output_dir, os.path.basename(file_path) + ".txt"
+                output_dir, os.path.basename(file_path) + ".srt"
             )
+            output_txt_file_path = increment_filename(output_txt_file_path)
             output_srt_file_path = increment_filename(output_srt_file_path)
 
+            print("Generating timestamps for: ", str(file_path))
             segments = []
             for i, segment in enumerate(result["segments"]):
                 start = timedelta(seconds=segment["start"])
@@ -45,6 +44,7 @@ def transcribe_audio_files(file_paths, output_dir):
                     )
                 )
 
+            print("Saving Text for: ", str(file_path))
             with open(output_srt_file_path, "w", encoding="utf-8") as f:
                 f.write(srt.compose(segments))
 
@@ -53,61 +53,6 @@ def transcribe_audio_files(file_paths, output_dir):
                 f.write(str(result["text"]))
 
             print(f"Transcript saved for {file_path} at {output_txt_file_path}")
-            print(f"Transcription saved to: {output_srt_file_path}")
+            print(f"srt captions for {file_path} at {output_srt_file_path}")
         else:
             print(f"File not found: {file_path}")
-
-
-def select_files():
-    file_paths = filedialog.askopenfilenames(
-        title="Select Audio Files", filetypes=[("Audio Files", "*.wav *.mp3 *.m4a")]
-    )
-    files_entry.delete(0, tk.END)
-    files_entry.insert(0, ";".join(file_paths))
-
-
-def select_output_dir():
-    output_dir = filedialog.askdirectory(title="Select Output Directory")
-    output_entry.delete(0, tk.END)
-    output_entry.insert(0, output_dir)
-
-
-def start_transcription():
-    file_paths = files_entry.get().split(";")
-    output_dir = output_entry.get()
-
-    if not file_paths or not output_dir:
-        messagebox.showerror(
-            "Error", "Please select audio files and an output directory."
-        )
-        return
-
-    transcribe_audio_files(file_paths, output_dir)
-    messagebox.showinfo("Success", "Transcription completed!")
-
-
-# Create the main window
-root = tk.Tk()
-root.title("Audio Transcription")
-
-# Create and place the widgets
-tk.Label(root, text="Select Audio Files:").grid(row=0, column=0, padx=10, pady=10)
-files_entry = tk.Entry(root, width=50)
-files_entry.grid(row=0, column=1, padx=10, pady=10)
-tk.Button(root, text="Browse", command=select_files).grid(
-    row=0, column=2, padx=10, pady=10
-)
-
-tk.Label(root, text="Select Output Directory:").grid(row=1, column=0, padx=10, pady=10)
-output_entry = tk.Entry(root, width=50)
-output_entry.grid(row=1, column=1, padx=10, pady=10)
-tk.Button(root, text="Browse", command=select_output_dir).grid(
-    row=1, column=2, padx=10, pady=10
-)
-
-tk.Button(root, text="Start Transcription", command=start_transcription).grid(
-    row=2, column=0, columnspan=3, pady=20
-)
-
-# Run the application
-root.mainloop()
