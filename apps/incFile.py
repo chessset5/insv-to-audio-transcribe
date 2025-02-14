@@ -1,3 +1,4 @@
+import os
 def increment_filename(file_path: str, template: str = " ({counter})") -> str:
     """
     increment_filename increments given file
@@ -22,6 +23,6 @@ def increment_filename(file_path: str, template: str = " ({counter})") -> str:
     while os.path.exists(file_path):
         increment: str = template.replace("{counter}", str(counter))
         new_name: str = f"{name}{increment}{ext}"
-        file_path = os.path.join(directory, new_name)
+        file_path = os.path.normpath(os.path.join(directory, new_name))
         counter += 1
     return file_path
