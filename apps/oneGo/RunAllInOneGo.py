@@ -48,11 +48,13 @@ def run_make_lrv_srt(file_paths: list[str], transcribe_list: list[str]) -> None:
         insv_directory: str = insv_path_components["dir"]
         insv_name: str = insv_path_components["filename"]
         insv_ext: str = insv_path_components["ext"]
-        lrv_ext: str = "lrv"
+        lrv_ext: str = ".lrv"
 
         # replace VID components with LRV component and check to see if path exits of LRV video
         if insv_name.startswith("VID"):
-            lrv_name: str = insv_name.replace("VID", "LRV")
+            # lrv_name: str = insv_name.replace("VID", "LRV")
+            #TODO FINISH THIS!!!
+            lrv_name :str = insv_name[3:]
 
             # check if the LRV file exists
             if os.path.exists(
