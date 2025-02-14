@@ -172,3 +172,4 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 files.json
+apps/oneGo/files.py
