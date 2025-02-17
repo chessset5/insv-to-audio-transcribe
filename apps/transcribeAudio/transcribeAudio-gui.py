@@ -1,40 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
 
-# THIS IS A GUI PROGRAM! PLEASE RUN FILE TO MAKE GUI!
-
-
-import os
-
-# os.environ["CUDA_VISIBLE_DEVICES"] = "1"  # Use the second GPU (index 1)
-# pip install git+https://github.com/openai/whisper.git
-import whisper
-
-
-def transcribe_audio_files(file_paths, output_dir):
-    # Load the Whisper model
-    model: whisper.Whisper = whisper.load_model(
-        name="turbo", in_memory=True
-    )  # Use the second GPU (index 1)
-
-    for file_path in file_paths:
-        # Check if the file exists
-        if os.path.exists(file_path):
-            # Transcribe the audio file
-            result = model.transcribe(file_path)
-
-            # Create the output file path
-            output_file_path = os.path.join(
-                output_dir, os.path.basename(file_path) + ".txt"
-            )
-
-            # Write the transcript to the output file
-            with open(output_file_path, "w") as f:
-                f.write(str(result["text"]))
-
-            print(f"Transcript saved for {file_path} at {output_file_path}")
-        else:
-            print(f"File not found: {file_path}")
+from transcribeAudio import transcribe_audio_files
 
 
 def select_files():

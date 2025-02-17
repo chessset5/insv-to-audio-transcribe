@@ -1,48 +1,26 @@
-import os
-import subprocess
-from concurrent.futures import ThreadPoolExecutor
 import tkinter as tk
 from tkinter import filedialog, messagebox
 
-# THIS IS A GUI PROGRAM! PLEASE RUN FILE TO MAKE GUI!
-
-
-# Function to extract audio from video files
-def extract_audio(video_path, output_folder):
-    # Define the output audio file path
-    audio_path = os.path.join(
-        output_folder, os.path.splitext(os.path.basename(video_path))[0] + ".wav"
-    )
-
-    # Run ffmpeg command to extract audio
-    subprocess.run(
-        ["ffmpeg", "-i", video_path, "-q:a", "0", "-map", "a", audio_path], check=True
-    )
-
-    print(f"Completed extraction for: {video_path}")
+import extractAudioFromInsv
 
 
 # Function to start the extraction process
-def start_extraction(video_files, output_folder):
+def start_extraction(video_files: list[str], output_folder: str) -> None | list[str]:
     if not video_files or not output_folder:
         messagebox.showerror("Error", "Please select video files and an output folder.")
         return
 
-    # Create the output folder if it doesn't exist
-    os.makedirs(output_folder, exist_ok=True)
-
-    # Use ThreadPoolExecutor to run multiple extractions simultaneously
-    with ThreadPoolExecutor() as executor:
-        executor.map(
-            lambda video_file: extract_audio(video_file, output_folder), video_files
-        )
+    extractAudioFromInsv.start_extraction(
+        video_files=video_files, output_folder=output_folder
+    )
 
     messagebox.showinfo("Success", "Audio extraction completed for all files.")
+    return
 
 
 # Function to select video files
 def select_files():
-    files = filedialog.askopenfilenames(filetypes=[("Video Files", "*.insv")])
+    files = filedialog.askopenfilenames(filetypes=[("Video Files", "*.insv;*.lrv")])
     file_list.delete(0, tk.END)
     for file in files:
         file_list.insert(tk.END, file)

@@ -1,4 +1,5 @@
 #!/usr/bin/env transcribe-audio
+from operator import mod
 import os
 from dotenv import load_dotenv
 
@@ -7,8 +8,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Retrieve the file path
-audio_path: str | None = os.getenv("TEST_AUDIO_FILE_PATH")
-srt_path: str | None = os.getenv("TEST_TEXT_FILE_PATH")
+AUDIO_PATH: str | None = os.getenv("TEST_AUDIO_FILE_PATH")
+STR_PATH: str | None = os.getenv("TEST_TEXT_FILE_PATH")
 
 import whisper
 import srt
@@ -41,4 +42,5 @@ def transcribe_to_srt(input_audio: str, output_srt: str, model_size: str = "medi
 
 # Example usage:
 # transcribe_to_srt("audio.mp3", "output.srt")
-transcribe_to_srt()
+if AUDIO_PATH and STR_PATH:
+    transcribe_to_srt(input_audio=AUDIO_PATH,output_srt=STR_PATH,model_size="turbo")
