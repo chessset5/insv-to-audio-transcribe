@@ -7,7 +7,7 @@ from datetime import timedelta
 import whisper
 import srt
 
-from apps.FileNameFunctions import increment_filename, get_base_file_name
+from apps.misc.FileNameFunctions import increment_filename, get_base_file_name
 
 
 def transcribe_audio_files(file_paths: list[str], output_dir: str) -> list[str]:

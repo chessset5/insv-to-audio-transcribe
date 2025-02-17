@@ -20,7 +20,7 @@ def start_extraction(video_files: list[str], output_folder: str) -> None | list[
 
 # Function to select video files
 def select_files():
-    files = filedialog.askopenfilenames(filetypes=[("Video Files", "*.insv")])
+    files = filedialog.askopenfilenames(filetypes=[("Video Files", "*.insv;*.lrv")])
     file_list.delete(0, tk.END)
     for file in files:
         file_list.insert(tk.END, file)
