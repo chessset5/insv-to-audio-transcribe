@@ -173,3 +173,4 @@ cython_debug/
 .pypirc
 files.json
 apps/oneGo/files.py
+*.DS_Store
