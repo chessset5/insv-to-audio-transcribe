@@ -9,7 +9,7 @@ if project_path not in sys.path:
     sys.path.append(project_path)
 
 
-from apps.FileNameFunctions import (
+from apps.misc.FileNameFunctions import (
     increment_filename,
     get_base_file_name,
     get_path_components,
@@ -42,6 +42,13 @@ def run_make_lrv_srt(file_paths: list[str], transcribe_list: list[str]) -> None:
             insv_name: str = get_base_file_name(file_path=file)
             srt_dict.update({insv_name: file})
 
+    # NOTE:
+    # Use string split and remove the first and fourth item and check if the lists
+    # or resulting joined strings are the same.
+    # Thats how you can tell if the lrv and insv exist in the same dir
+    # split on _ of the file name, not the ext
+    #
+
     for file in file_paths:
         # get lrv name
         insv_path_components: dict[str, str] = get_path_components(file_path=file)
@@ -53,8 +60,8 @@ def run_make_lrv_srt(file_paths: list[str], transcribe_list: list[str]) -> None:
         # replace VID components with LRV component and check to see if path exits of LRV video
         if insv_name.startswith("VID"):
             # lrv_name: str = insv_name.replace("VID", "LRV")
-            #TODO FINISH THIS!!!
-            lrv_name :str = insv_name[3:]
+            # TODO FINISH THIS!!!
+            lrv_name: str = insv_name[3:]
 
             # check if the LRV file exists
             if os.path.exists(
