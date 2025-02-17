@@ -114,7 +114,7 @@ class INSVApp:
 
     def select_files(self):
         # Open file dialog to select .insv files
-        filetypes = [("INSV files", "*.insv")]
+        filetypes = [("INSV files", "*.insv;*.lrv")]
         selected_files = filedialog.askopenfilenames(
             title="Select INSV files", filetypes=filetypes
         )
