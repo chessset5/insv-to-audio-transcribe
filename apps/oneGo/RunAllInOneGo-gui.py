@@ -1,7 +1,19 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+
+project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if project_path not in sys.path:
+    sys.path.append(project_path)
+
+
 from RunAllInOneGo import run_scripts
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from tkinter import ttk
+
+from apps.misc.GlobalVariables import ACCEPTABLE_VIDEO_FILE_TYPES
 
 
 # Wrapper function to run scripts and show a GUI message
@@ -29,7 +41,7 @@ def run_scripts_gui(file_paths: list[str]) -> None:
 class INSVApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("INSV File Processor")
+        self.root.title("Video File Transcriber")
         self.root.geometry("600x400")
 
         # List to store file paths and their associated checkboxes
@@ -38,7 +50,7 @@ class INSVApp:
 
         # Top buttons
         self.select_button = tk.Button(
-            root, text="Select INSV files", command=self.select_files
+            root, text="Select Video files", command=self.select_files
         )
         self.select_button.grid(row=0, column=1, padx=10, pady=10, sticky="e")
 
@@ -114,9 +126,9 @@ class INSVApp:
 
     def select_files(self):
         # Open file dialog to select .insv files
-        filetypes = [("INSV files", "*.insv;*.lrv")]
+        filetypes = ACCEPTABLE_VIDEO_FILE_TYPES
         selected_files = filedialog.askopenfilenames(
-            title="Select INSV files", filetypes=filetypes
+            title="Select Video files", filetypes=filetypes
         )
 
         # Add selected files to the list and update the text box

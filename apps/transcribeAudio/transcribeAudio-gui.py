@@ -1,12 +1,22 @@
+#!/usr/bin/env python3
+import os
+import sys
 import tkinter as tk
 from tkinter import filedialog, messagebox
 
 from transcribeAudio import transcribe_audio_files
 
+project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if project_path not in sys.path:
+    sys.path.append(project_path)
+
+
+from apps.misc.GlobalVariables import ACCEPTABLE_AUDIO_FILE_TYPES
+
 
 def select_files():
     file_paths = filedialog.askopenfilenames(
-        title="Select Audio Files", filetypes=[("Audio Files", "*.wav *.mp3 *.m4a")]
+        title="Select Audio Files", filetypes=ACCEPTABLE_AUDIO_FILE_TYPES
     )
     files_entry.delete(0, tk.END)
     files_entry.insert(0, ";".join(file_paths))

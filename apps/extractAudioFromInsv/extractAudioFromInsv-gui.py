@@ -1,7 +1,17 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+
+project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if project_path not in sys.path:
+    sys.path.append(project_path)
+
 import tkinter as tk
 from tkinter import filedialog, messagebox
 
 import extractAudioFromInsv
+from apps.misc.GlobalVariables import ACCEPTABLE_VIDEO_FILE_TYPES
 
 
 # Function to start the extraction process
@@ -20,7 +30,8 @@ def start_extraction(video_files: list[str], output_folder: str) -> None | list[
 
 # Function to select video files
 def select_files():
-    files = filedialog.askopenfilenames(filetypes=[("Video Files", "*.insv;*.lrv")])
+    file_types = ACCEPTABLE_VIDEO_FILE_TYPES
+    files = filedialog.askopenfilenames(filetypes=file_types)
     file_list.delete(0, tk.END)
     for file in files:
         file_list.insert(tk.END, file)
