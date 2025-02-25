@@ -5,14 +5,15 @@ import os
 import sys
 from datetime import timedelta
 
+import whisper.utils
+
 project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 if project_path not in sys.path:
     sys.path.append(project_path)
 
 import whisper
-import srt
 
-from apps.misc.FileNameFunctions import increment_filename, get_base_file_name
+from apps.misc.FileNameFunctions import get_base_file_name, increment_filename
 
 
 def transcribe_audio_files(file_paths: list[str], output_dir: str) -> list[str]:
@@ -32,36 +33,56 @@ def transcribe_audio_files(file_paths: list[str], output_dir: str) -> list[str]:
 
             # Create the output file path
             name = get_base_file_name(file_path=file_path)
-            output_txt_file_path = os.path.normpath(
-                os.path.join(output_dir, os.path.basename(name) + ".txt")
-            )
-            output_srt_file_path = os.path.normpath(
-                os.path.join(output_dir, os.path.basename(name) + ".srt")
-            )
-            output_txt_file_path = increment_filename(output_txt_file_path)
-            output_srt_file_path = increment_filename(output_srt_file_path)
+            output_txt_file_path = os.path.normpath(path=os.path.join(output_dir, os.path.basename(name) + ".txt"))
+            output_srt_file_path = os.path.normpath(path=os.path.join(output_dir, os.path.basename(name) + ".srt"))
+            output_vtt_file_path = os.path.normpath(path=os.path.join(output_dir, os.path.basename(name) + ".vtt"))
+            output_tsv_file_path = os.path.normpath(path=os.path.join(output_dir, os.path.basename(name) + ".tsv"))
+            output_json_file_path = os.path.normpath(path=os.path.join(output_dir, os.path.basename(name) + ".json"))
+            output_txt_file_path: str = increment_filename(file_path=output_txt_file_path)
+            output_srt_file_path: str = increment_filename(file_path=output_srt_file_path)
+            output_vtt_file_path: str = increment_filename(file_path=output_vtt_file_path)
+            output_tsv_file_path: str = increment_filename(file_path=output_tsv_file_path)
+            output_json_file_path: str = increment_filename(file_path=output_json_file_path)
+            
+            print(f"Writing the following transcription for {file_path} at\
+                \n\t{output_txt_file_path}\
+                \n\t{output_srt_file_path}\
+                \n\t{output_vtt_file_path}\
+                \n\t{output_tsv_file_path}\
+                \n\t{output_json_file_path}")
+            
+            # file_dir: str = os.path.normpath(os.path.dirname(file_path))
+            
+            # Save as an SRT file
+            output_txt_writer = whisper.utils.get_writer("txt", output_dir)
+            output_txt_writer(result, output_txt_file_path,{})
 
-            print("Generating timestamps for: ", str(file_path))
-            segments = []
-            for i, segment in enumerate(result["segments"]):
-                start = timedelta(seconds=segment["start"])
-                end = timedelta(seconds=segment["end"])
-                segments.append(
-                    srt.Subtitle(
-                        index=i + 1, start=start, end=end, content=segment["text"]
-                    )
-                )
 
-            print("Saving Text for: ", str(file_path))
-            with open(output_srt_file_path, "w", encoding="utf-8") as f:
-                f.write(srt.compose(segments))
+            # Save as a VTT file
+            output_srt_writer = whisper.utils.get_writer("srt", output_dir)
+            output_srt_writer(result, output_srt_file_path,{})
+            
+            # Save as an SRT file
+            output_vtt_writer = whisper.utils.get_writer("vtt", output_dir)
+            output_vtt_writer(result, output_vtt_file_path,{})
+            
+            # Save as an SRT file
+            output_tsv_writer = whisper.utils.get_writer("tsv", output_dir)
+            output_tsv_writer(result, output_tsv_file_path,{})
+            
+            # Save as an SRT file
+            output_json_writer = whisper.utils.get_writer("json", output_dir)
+            output_json_writer(result, output_json_file_path,{})
 
-            # Write the transcript to the output file
-            with open(output_txt_file_path, "w", encoding="utf-8") as f:
-                f.write(str(result["text"]))
 
-            output_files.append(output_srt_file_path)
+            
+
             output_files.append(output_txt_file_path)
+            output_files.append(output_srt_file_path)
+            output_files.append(output_vtt_file_path)
+            output_files.append(output_tsv_file_path)
+            output_files.append(output_json_file_path)
+            
 
             print(f"Transcript saved for {file_path} at {output_txt_file_path}")
             print(f"srt captions for {file_path} at {output_srt_file_path}")
