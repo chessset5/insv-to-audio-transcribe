@@ -174,3 +174,6 @@ cython_debug/
 files.json
 apps/oneGo/files.py
 *.DS_Store
+apps/misc/bin/win64/ffmpeg/bin/ffmpeg.exe
+apps/misc/bin/win64/ffmpeg/bin/ffplay.exe
+apps/misc/bin/win64/ffmpeg/bin/ffprobe.exe

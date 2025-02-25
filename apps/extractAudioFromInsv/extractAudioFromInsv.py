@@ -1,11 +1,14 @@
 import os
+import sys
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from apps.misc.FileNameFunctions import increment_filename
 
 
 # THIS IS A GUI PROGRAM! PLEASE RUN FILE TO MAKE GUI!
-
+PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if PROJECT_PATH not in sys.path:
+    sys.path.append(PROJECT_PATH)
 
 # Function to extract audio from video files
 def extract_audio(video_path: str, output_folder: str) -> str:
@@ -14,10 +17,21 @@ def extract_audio(video_path: str, output_folder: str) -> str:
         output_folder, os.path.splitext(os.path.basename(video_path))[0] + ".wav"
     )
     audio_path: str = increment_filename(file_path=audio_path)
+    path : str = r"ffmpeg"
+    if os.name == 'nt':
+        # Windows
+        path = r".\apps\misc\bin\win64\ffmpeg\bin\ffmpeg.exe"
+    # elif os.name == 'posix':
+    #     if os.uname().sysname == 'Darwin':
+    #         # macOS
+    #         path = "/path/to/macos/directory"
+    #     else:
+    #         # Linux/Unix
+    #         path = "/path/to/linux/directory"
 
     # Run ffmpeg command to extract audio
     subprocess.run(
-        args=["ffmpeg", "-i", video_path, "-q:a", "0", "-map", "a", audio_path], check=True
+        args=[path, "-i", video_path, "-q:a", "0", "-map", "a", audio_path], check=True
     )
 
     print(f"Completed extraction for: {video_path}")

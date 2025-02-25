@@ -1,0 +1,14 @@
+Create the following TK GUI:
+
+The application will have four buttons, one at the right top called "Select INSV files" which will open a dialog window allowing users to navigate and select multiple .insv files and only show and allow them to select insv file. The Full paths will be stored.
+
+The bottom right of the window will have a button called "Run all" which will take the selected files and pass them as a string list to the function def run_scripts(file_paths: list[str]) -> None
+
+The bottom left of the window should have a button called "Remove" which will be explained below.
+The top left of the window there should be a button called "toggle all" which will be explained below.
+
+The GUI should have a box in-between the top and bottom buttons which will be referred to as the "text box". The "text box" is 5 items tall and has a scroll bar to view more items in the "text box".
+The "text box" will contain the paths of the files added by the "Select INSV files" button. To the left of each path, there should be the ability to select the file individuall using check boxes.
+The button "toggle all" should check all of the check boxes in the "text box" the first time it is pressed. The next time it is pressed it should uncheck all of the check boxes in the "text box". The button should flip between selecting and deselecting all check boxes in the "text box" ever time it is pressed.
+
+The "remove" button should remove all checked boxes from the list of selected files when pressed. 
