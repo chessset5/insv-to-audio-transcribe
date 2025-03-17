@@ -13,7 +13,9 @@ if project_path not in sys.path:
 
 import whisper
 
-from apps.misc.FileNameFunctions import get_base_file_name, increment_filename
+from apps.misc.FileNameFunctions import (get_base_file_name,
+                                         get_path_components,
+                                         increment_filename)
 
 
 def transcribe_audio_files(file_paths: list[str], output_dir: str) -> list[str]:
@@ -90,3 +92,8 @@ def transcribe_audio_files(file_paths: list[str], output_dir: str) -> list[str]:
             print(f"File not found: {file_path}")
 
     return output_files
+
+def run_scripts(list:list[str])->None:
+    for i in list:
+        dir: str = get_path_components(file_path=i)[r"dir"]
+        transcribe_audio_files(file_paths=[i],output_dir=dir)

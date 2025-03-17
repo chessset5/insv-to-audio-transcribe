@@ -1,11 +1,6 @@
 #!/usr/bin/env transcribe-audio
 from operator import mod
 import os
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-# make sure to make .env copy from .env-example
-load_dotenv()
 
 # Retrieve the file path
 AUDIO_PATH: str | None = os.getenv("TEST_AUDIO_FILE_PATH")
