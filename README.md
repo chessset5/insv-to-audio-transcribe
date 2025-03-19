@@ -12,4 +12,11 @@ conda activate transcribe
 pip3 install openai-whisper srt
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
 ```
+
+## Nvidia GPUs
+
 [https://developer.nvidia.com/cuda-12-6-0-download-archive](https://developer.nvidia.com/cuda-12-6-0-download-archive)
+
+## AMD GPUs
+
+[https://rocm.blogs.amd.com/artificial-intelligence/whisper/README.html](https://rocm.blogs.amd.com/artificial-intelligence/whisper/README.html)
