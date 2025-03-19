@@ -9,10 +9,11 @@ from tkinter import filedialog, messagebox, ttk
 project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 if project_path not in sys.path:
     sys.path.append(project_path)
-
+    
+from apps.misc.GlobalVariables import ACCEPTABLE_AUDIO_FILE_TYPES
 from apps.transcribeAudio.transcribeAudio import run_scripts
 
-FILE_TYPES: list[tuple[str, str]] = [("INSV files", "*.insv;*.lrv")]
+FILE_TYPES: list[tuple[str, str]] = ACCEPTABLE_AUDIO_FILE_TYPES
 TITLE_NAME = "File Processor"
 
 

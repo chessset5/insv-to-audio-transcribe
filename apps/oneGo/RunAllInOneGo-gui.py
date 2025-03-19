@@ -26,9 +26,9 @@ def run_scripts_gui(file_paths: list[str]) -> None:
 
     # If the user confirms, run the scripts
     if confirmation:
-        messagebox.showinfo(
-            "Running Scripts", f"Running scripts for files: {file_paths}"
-        )
+        # messagebox.showinfo(
+        #     "Running Scripts", f"Running scripts for files: {file_paths}"
+        # )
         run_scripts(file_paths=file_paths)
         messagebox.showinfo(
             "Finished", f"Finished running scripts for files: {file_paths}"
