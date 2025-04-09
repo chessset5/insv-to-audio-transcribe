@@ -4,6 +4,7 @@
 import os
 import sys
 from datetime import timedelta
+from typing import TextIO
 
 import whisper.utils
 
@@ -13,16 +14,12 @@ if project_path not in sys.path:
 
 import whisper
 
-from apps.misc.FileNameFunctions import (get_base_file_name,
-                                         get_path_components,
-                                         increment_filename)
+from apps.misc.FileNameFunctions import get_base_file_name, get_path_components, increment_filename
 
 
 def transcribe_audio_files(file_paths: list[str], output_dir: str) -> list[str]:
     # Load the Whisper model
-    model: whisper.Whisper = whisper.load_model(
-        name="turbo", in_memory=True
-    )  # Use the second GPU (index 1)
+    model: whisper.Whisper = whisper.load_model(name="turbo", in_memory=True)  # Use the second GPU (index 1)
 
     output_files = list[str]()
 
@@ -45,46 +42,48 @@ def transcribe_audio_files(file_paths: list[str], output_dir: str) -> list[str]:
             output_vtt_file_path: str = increment_filename(file_path=output_vtt_file_path)
             output_tsv_file_path: str = increment_filename(file_path=output_tsv_file_path)
             output_json_file_path: str = increment_filename(file_path=output_json_file_path)
-            
-            print(f"Writing the following transcription for {file_path} at\
+
+            print(
+                f"Writing the following transcription for {file_path} at\
                 \n\t{output_txt_file_path}\
                 \n\t{output_srt_file_path}\
                 \n\t{output_vtt_file_path}\
                 \n\t{output_tsv_file_path}\
-                \n\t{output_json_file_path}")
-            
+                \n\t{output_json_file_path}"
+            )
+
             # file_dir: str = os.path.normpath(os.path.dirname(file_path))
-            
+
             # Save as an SRT file
             output_txt_writer = whisper.utils.get_writer("txt", output_dir)
-            output_txt_writer(result, output_txt_file_path,{})
-
+            with open(file=output_txt_file_path, mode="w", encoding="utf-8") as f:
+                output_txt_writer(result, f, {})
 
             # Save as a VTT file
             output_srt_writer = whisper.utils.get_writer("srt", output_dir)
-            output_srt_writer(result, output_srt_file_path,{})
-            
+            with open(file=output_srt_file_path, mode="w", encoding="utf-8") as f:
+                output_srt_writer(result, f, {})
+
             # Save as an SRT file
             output_vtt_writer = whisper.utils.get_writer("vtt", output_dir)
-            output_vtt_writer(result, output_vtt_file_path,{})
-            
+            with open(file=output_vtt_file_path, mode="w", encoding="utf-8") as f:
+                output_vtt_writer(result, f, {})
+
             # Save as an SRT file
             output_tsv_writer = whisper.utils.get_writer("tsv", output_dir)
-            output_tsv_writer(result, output_tsv_file_path,{})
-            
+            with open(file=output_tsv_file_path, mode="w", encoding="utf-8") as f:
+                output_tsv_writer(result, f, {})
+
             # Save as an SRT file
             output_json_writer = whisper.utils.get_writer("json", output_dir)
-            output_json_writer(result, output_json_file_path,{})
-
-
-            
+            with open(file=output_json_file_path, mode="w", encoding="utf-8") as f:
+                output_json_writer(result, f, {})
 
             output_files.append(output_txt_file_path)
             output_files.append(output_srt_file_path)
             output_files.append(output_vtt_file_path)
             output_files.append(output_tsv_file_path)
             output_files.append(output_json_file_path)
-            
 
             print(f"Transcript saved for {file_path} at {output_txt_file_path}")
             print(f"srt captions for {file_path} at {output_srt_file_path}")
@@ -93,7 +92,8 @@ def transcribe_audio_files(file_paths: list[str], output_dir: str) -> list[str]:
 
     return output_files
 
-def run_scripts(list:list[str])->None:
+
+def run_scripts(list: list[str]) -> None:
     for i in list:
         dir: str = get_path_components(file_path=i)[r"dir"]
-        transcribe_audio_files(file_paths=[i],output_dir=dir)
+        transcribe_audio_files(file_paths=[i], output_dir=dir)

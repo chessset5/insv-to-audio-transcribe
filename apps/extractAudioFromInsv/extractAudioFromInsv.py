@@ -3,6 +3,7 @@ import sys
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from apps.misc.FileNameFunctions import increment_filename
+from collections.abc import Iterator
 
 
 # THIS IS A GUI PROGRAM! PLEASE RUN FILE TO MAKE GUI!
@@ -50,7 +51,7 @@ def start_extraction(video_files: list[str], output_folder: str) -> None | list[
 
     # Use ThreadPoolExecutor to run multiple extractions simultaneously
     with ThreadPoolExecutor() as executor:
-        result: os.Iterator[str] = executor.map(
+        result: Iterator[str] = executor.map(
             lambda video_file: extract_audio(video_path=video_file, output_folder=output_folder), video_files
         )
 
