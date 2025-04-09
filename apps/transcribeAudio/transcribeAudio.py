@@ -3,8 +3,6 @@
 
 import os
 import sys
-from datetime import timedelta
-from typing import TextIO
 
 import whisper.utils
 
@@ -58,8 +56,7 @@ def transcribe_audio_files(file_paths: list[str], output_dir: str) -> list[str]:
             
             # Save as an SRT file
             output_txt_writer = whisper.utils.get_writer("txt", output_dir)
-            with open(file=output_txt_file_path,mode="w",encoding="utf-8") as f:
-                output_txt_writer(result, f,{})
+            output_txt_writer(result, output_txt_file_path,{})
 
 
             # Save as a VTT file
